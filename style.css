@@ -51,12 +51,13 @@ nav a:hover {
 }
 
 .main-photo {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    object-fit: cover;
+    width: 100%;       /* Ширина на весь блок */
+    max-width: 500px;  /* Максимальная ширина */
+    height: auto;      /* Высота подстроится автоматически */
+    border-radius: 10px; /* Легкое скругление углов */
     margin: 20px 0;
     border: 5px solid #3498db;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Необязательно: добавит тень */
 }
 
 h1 {
