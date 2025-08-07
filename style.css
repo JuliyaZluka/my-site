@@ -3,14 +3,21 @@ body {
     margin: 0;
     font-family: 'Arial', sans-serif;
     color: white;
+    overflow-x: hidden;
 }
 
+/* Навигация */
 nav {
     position: fixed;
     width: 100%;
     background: rgba(0, 0, 0, 0.7);
     padding: 15px 0;
     z-index: 1000;
+    transition: background 0.3s;
+}
+
+nav.scrolled {
+    background: rgba(0, 0, 0, 0.9);
 }
 
 nav ul {
@@ -29,9 +36,14 @@ nav a {
     color: white;
     text-decoration: none;
     font-size: 18px;
+    transition: color 0.3s;
 }
 
-/* Секции с фоновыми изображениями */
+nav a:hover {
+    color: #3498db;
+}
+
+/* Секции с параллакс-эффектом */
 .fullscreen-section {
     min-height: 100vh;
     display: flex;
@@ -41,6 +53,7 @@ nav a {
     background-position: center;
     background-attachment: fixed;
     position: relative;
+    overflow: hidden;
 }
 
 .fullscreen-section::before {
@@ -50,32 +63,52 @@ nav a {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Затемнение фона */
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .content {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     text-align: center;
     padding: 20px;
     max-width: 800px;
+    opacity: 0; /* Начальная прозрачность для анимации */
+    transform: translateY(30px); /* Начальное смещение */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
-/* Индивидуальные фоны для секций */
+.content.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Индивидуальные фоны */
 #home {
-    background-image: url('home-bg.png');
+    background-image: url('home-bg.jpg');
 }
 
 #about {
-    background-image: url('about-photo.jpg');
+    background-image: url('about-bg.jpg');
 }
 
 #services {
-    background-image: url('services-bg.png');
+    background-image: url('services-bg.jpg');
 }
 
 #contact {
-    background-image: url('contact-bg.png');
+    background-image: url('contact-bg.jpg');
+}
+
+/* Стили для текста */
+h1, h2 {
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.highlight {
+    font-weight: bold;
+    color: #3498db;
+    font-size: 1.2em;
 }
 
 /* Адаптивность */
@@ -83,6 +116,10 @@ nav a {
     nav ul li {
         display: block;
         margin: 10px 0;
+    }
+    
+    .fullscreen-section {
+        background-attachment: scroll;
     }
     
     .content {
