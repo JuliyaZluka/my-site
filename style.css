@@ -1,128 +1,152 @@
 /* Общие стили */
 body {
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-    color: white;
-    overflow-x: hidden;
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  color: white;
+  overflow-x: hidden;
 }
 
 /* Навигация */
 nav {
-    position: fixed;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 15px 0;
-    z-index: 1000;
-    transition: background 0.3s;
+  position: fixed;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 15px 0;
+  z-index: 1000;
+  transition: background 0.3s;
 }
 
 nav.scrolled {
-    background: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.9);
 }
 
 nav ul {
-    list-style: none;
-    text-align: center;
-    margin: 0;
-    padding: 0;
+  list-style: none;
+  text-align: center;
+  margin: 0;
+  padding: 0;
 }
 
 nav ul li {
-    display: inline-block;
-    margin: 0 20px;
+  display: inline-block;
+  margin: 0 15px;
 }
 
 nav a {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-    transition: color 0.3s;
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  transition: color 0.3s;
 }
 
 nav a:hover {
-    color: #3498db;
+  color: #3498db;
 }
 
-/* Секции с параллакс-эффектом */
+/* Секции с фоновыми изображениями */
 .fullscreen-section {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    position: relative;
-    overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  position: relative;
+  overflow: hidden;
+  padding: 20px 0;
 }
 
 .fullscreen-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
 }
 
 .content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    padding: 20px;
-    max-width: 800px;
-    opacity: 0; /* Начальная прозрачность для анимации */
-    transform: translateY(30px); /* Начальное смещение */
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 30px;
+  max-width: 800px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
 }
 
 .content.visible {
-    opacity: 1;
-    transform: translateY(0);
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Индивидуальные фоны */
 #home {
-    background-image: url('home-bg.png');
+  background-image: url('home-bg.png');
 }
 
 #about {
-    background-image: url('about-photo.jpg');
+  background-image: url('about-photo.jpg');
 }
 
 #services {
-    background-image: url('services-bg.png');
+  background-image: url('services-bg.png');
 }
 
 #contact {
-    background-image: url('contact-bg.png');
+  background-image: url('contact-bg.png');
 }
 
-/* Стили для текста */
+/* Стили текста */
 h1, h2 {
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  margin-bottom: 25px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .highlight {
-    font-weight: bold;
-    color: #3498db;
-    font-size: 1.2em;
+  font-weight: bold;
+  color: #3498db;
+  font-size: 1.2em;
 }
 
-/* Адаптивность */
+/* Мобильная версия */
 @media (max-width: 768px) {
-    nav ul li {
-        display: block;
-        margin: 10px 0;
-    }
-    
-    .fullscreen-section {
-        background-attachment: scroll;
-    }
-    
-    .content {
-        padding: 10px;
-    }
+  nav ul li {
+    display: block;
+    margin: 10px 0;
+  }
+
+  .fullscreen-section {
+    background-attachment: scroll !important;
+    background-position: center center !important;
+    min-height: 90vh;
+  }
+
+  .content {
+    padding: 25px 15px !important;
+    margin: 15px;
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  /* Отключаем параллакс на мобильных */
+  .fullscreen-section {
+    background-position: center !important;
+  }
+}
+
+/* Анимация fade-in для всех элементов */
+.fade-in {
+  animation: fadeIn 1.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
