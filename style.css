@@ -84,7 +84,7 @@ nav a:hover {
 
 /* Индивидуальные фоны */
 #home {
-    background-image: url('home-bg.jpg');
+    background-image: url('home-bg.png');
 }
 
 #about {
@@ -92,11 +92,11 @@ nav a:hover {
 }
 
 #services {
-    background-image: url('services-bg.jpg');
+    background-image: url('services-bg.png');
 }
 
 #contact {
-    background-image: url('contact-bg.jpg');
+    background-image: url('contact-bg.png');
 }
 
 /* Стили для текста */
