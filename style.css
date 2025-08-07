@@ -13,11 +13,6 @@ nav {
   background: rgba(0, 0, 0, 0.7);
   padding: 15px 0;
   z-index: 1000;
-  transition: background 0.3s;
-}
-
-nav.scrolled {
-  background: rgba(0, 0, 0, 0.9);
 }
 
 nav ul {
@@ -29,18 +24,13 @@ nav ul {
 
 nav ul li {
   display: inline-block;
-  margin: 0 15px;
+  margin: 0 20px;
 }
 
 nav a {
   color: white;
   text-decoration: none;
   font-size: 18px;
-  transition: color 0.3s;
-}
-
-nav a:hover {
-  color: #3498db;
 }
 
 /* Секции с фоновыми изображениями */
@@ -51,10 +41,7 @@ nav a:hover {
   justify-content: center;
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
   position: relative;
-  overflow: hidden;
-  padding: 20px 0;
 }
 
 .fullscreen-section::before {
@@ -64,27 +51,15 @@ nav a:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1;
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .content {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   text-align: center;
-  padding: 30px;
+  padding: 20px;
   max-width: 800px;
-  margin: 0 auto;
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-  background-color: rgba(0, 0, 0, 0.6);
-  border-radius: 10px;
-}
-
-.content.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 /* Индивидуальные фоны */
@@ -106,8 +81,8 @@ nav a:hover {
 
 /* Стили текста */
 h1, h2 {
-  margin-bottom: 25px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .highlight {
@@ -122,31 +97,13 @@ h1, h2 {
     display: block;
     margin: 10px 0;
   }
-
-  .fullscreen-section {
-    background-attachment: scroll !important;
-    background-position: center center !important;
-    min-height: 90vh;
-  }
-
+  
   .content {
-    padding: 25px 15px !important;
-    margin: 15px;
-    background-color: rgba(0, 0, 0, 0.7);
+    padding: 15px;
   }
-
-  /* Отключаем параллакс на мобильных */
+  
+  /* Фиксируем фон на мобильных */
   .fullscreen-section {
-    background-position: center !important;
+    background-attachment: scroll;
   }
-}
-
-/* Анимация fade-in для всех элементов */
-.fade-in {
-  animation: fadeIn 1.5s ease-in-out forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }
