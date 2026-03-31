@@ -16,7 +16,6 @@
         </ul>
     </nav>
 
-    <!-- Секция 1: Главная -->
     <section id="home" class="fullscreen-section">
         <div class="content">
             <h1>Профессиональные одностраничные сайты</h1>
@@ -24,7 +23,6 @@
         </div>
     </section>
 
-    <!-- Секция 2: Обо мне -->
     <section id="about" class="fullscreen-section">
         <div class="content">
             <h2>Обо мне</h2>
@@ -33,7 +31,6 @@
         </div>
     </section>
 
-    <!-- Секция 3: Услуги -->
     <section id="services" class="fullscreen-section">
         <div class="content">
             <h2>Услуги</h2>
@@ -45,7 +42,6 @@
         </div>
     </section>
 
-    <!-- Секция 4: Контакты -->
     <section id="contact" class="fullscreen-section">
         <div class="content">
             <h2>Контакты</h2>
@@ -54,6 +50,98 @@
         </div>
     </section>
 
+    <!-- ИИ-АССИСТЕНТ -->
+    <div id="ai-chat-widget">
+        <button id="chat-toggle" class="chat-toggle-btn">💬 Спросить ИИ</button>
+        <div id="chat-window" class="chat-window">
+            <div class="chat-header">
+                <span>🤖 Юлия AI</span>
+                <button id="chat-close" class="chat-close-btn">×</button>
+            </div>
+            <div id="chat-messages" class="chat-messages">
+                <div class="message bot-message">
+                    <div class="message-bubble">👋 Привет! Я ИИ-помощник Юлии. Спросите меня о ценах, сроках или услугах.</div>
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Напишите вопрос..." class="chat-input">
+                <button id="chat-send" class="chat-send-btn">→</button>
+            </div>
+            <div class="chat-footer">Отвечает нейросеть DeepSeek</div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
+    <script>
+        const WORKER_URL = '/api/chat';
+        
+        const toggleBtn = document.getElementById('chat-toggle');
+        const closeBtn = document.getElementById('chat-close');
+        const chatWindow = document.getElementById('chat-window');
+        const messagesContainer = document.getElementById('chat-messages');
+        const inputField = document.getElementById('chat-input');
+        const sendButton = document.getElementById('chat-send');
+        
+        toggleBtn.addEventListener('click', () => chatWindow.classList.add('open'));
+        closeBtn.addEventListener('click', () => chatWindow.classList.remove('open'));
+        
+        function addMessage(text, isUser) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble';
+            bubble.textContent = text;
+            wrapper.appendChild(bubble);
+            messagesContainer.appendChild(wrapper);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function showTyping() {
+            const wrapper = document.createElement('div');
+            wrapper.id = 'typing-indicator';
+            wrapper.className = 'message bot-message';
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble';
+            bubble.innerHTML = '🤔 <span style="opacity:0.7;">печатает...</span>';
+            wrapper.appendChild(bubble);
+            messagesContainer.appendChild(wrapper);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function hideTyping() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) indicator.remove();
+        }
+        
+        async function sendMessage() {
+            const text = inputField.value.trim();
+            if (!text) return;
+            addMessage(text, true);
+            inputField.value = '';
+            showTyping();
+            try {
+                const response = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text })
+                });
+                const data = await response.json();
+                hideTyping();
+                if (data.reply) addMessage(data.reply, false);
+                else addMessage('⚠️ Ошибка. Попробуйте позже.', false);
+            } catch (error) {
+                hideTyping();
+                addMessage('⚠️ Ошибка соединения. Напишите Юлии: ddf25@mail.ru', false);
+            }
+        }
+        
+        sendButton.addEventListener('click', sendMessage);
+        inputField.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+        document.addEventListener('click', (e) => {
+            if (!chatWindow.contains(e.target) && !toggleBtn.contains(e.target)) {
+                chatWindow.classList.remove('open');
+            }
+        });
+    </script>
 </body>
 </html>
