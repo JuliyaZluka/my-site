@@ -1,14 +1,36 @@
 // api/chat.js
 export default async function handler(req, res) {
+  // Настройка CORS — разрешаем запросы с любых источников (или конкретно с GitHub Pages)
+  const allowedOrigins = [
+    'https://juliyazluka.github.io',
+    'https://my-site-bice-three.vercel.app', // ваш Vercel домен
+    'http://localhost:3000' // для локальной разработки
+  ];
+  
+  const origin = req.headers.origin;
+  
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  
+  // Разрешаем нужные методы и заголовки
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  
+  // Обрабатываем предварительный OPTIONS запрос (браузер отправляет его перед POST)
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
   // Разрешаем только POST запросы
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Метод не поддерживается' });
   }
 
-  // Получаем API ключ из переменных окружения (защищено)
+  // Получаем API ключ из переменных окружения
   const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
 
-  // Если ключ не задан
   if (!DEEPSEEK_API_KEY) {
     return res.status(500).json({ error: 'API ключ не настроен' });
   }
@@ -16,12 +38,10 @@ export default async function handler(req, res) {
   try {
     const { message } = req.body;
 
-    // Проверяем, что сообщение пришло
     if (!message) {
       return res.status(400).json({ error: 'Сообщение не получено' });
     }
 
-    // Запрос к DeepSeek API
     const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -55,7 +75,6 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    // Проверяем ответ от DeepSeek
     if (data.error) {
       console.error('DeepSeek API error:', data.error);
       return res.status(500).json({ error: 'Ошибка от нейросети' });
@@ -63,7 +82,6 @@ export default async function handler(req, res) {
 
     const reply = data.choices[0].message.content;
     
-    // Возвращаем ответ
     res.status(200).json({ reply });
     
   } catch (error) {
