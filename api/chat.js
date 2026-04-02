@@ -1,4 +1,4 @@
-// api/chat.js
+// api/chat.js — версия для VseGPT
 export default async function handler(req, res) {
   // Настройка CORS — разрешаем запросы с ваших доменов
   const allowedOrigins = [
@@ -24,10 +24,10 @@ export default async function handler(req, res) {
   }
 
   // Получаем API ключ из переменных окружения Vercel
-  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+  const VSEGPT_API_KEY = process.env.VSEGPT_API_KEY;
 
-  if (!GEMINI_API_KEY) {
-    console.error('GEMINI_API_KEY is not set');
+  if (!VSEGPT_API_KEY) {
+    console.error('VSEGPT_API_KEY is not set');
     return res.status(500).json({ error: 'API ключ не настроен на сервере' });
   }
 
@@ -38,49 +38,47 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Сообщение не получено' });
     }
 
-    // Запрос к Gemini API
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    // Запрос к API VseGPT
+    const response = await fetch('https://api.vseppt.ru/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${VSEGPT_API_KEY}`
       },
       body: JSON.stringify({
-        contents: [
+        model: 'llama-3.3-70b',  // мощная бесплатная модель
+        messages: [
           {
-            role: 'user',
-            parts: [
-              {
-                text: `Ты — дружелюбный помощник Юлии, которая создаёт одностраничные сайты.
-Твоя задача: отвечать на вопросы о ценах, сроках, услугах.
+            role: 'system',
+            content: `Ты — дружелюбный помощник Юлии, которая создаёт одностраничные сайты.
+Отвечай кратко, по делу, вежливо.
 Информация о Юлии:
 - Стоимость сайта: от 10 000 руб.
 - Срок разработки: 3-7 дней
 - Услуги: лендинги, адаптация под мобильные устройства, формы обратной связи, ИИ-ассистенты
 - Контакты: телефон +7 965 106-85-68, email ddf25@mail.ru
-Отвечай кратко, по делу, вежливо, без лишних слов. Если вопрос не по теме — предложи связаться с Юлией напрямую.
-
-Вопрос пользователя: ${message}`
-              }
-            ]
+Если вопрос не по теме — предложи связаться с Юлией напрямую.`
+          },
+          {
+            role: 'user',
+            content: message
           }
         ],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 500
-        }
+        temperature: 0.7,
+        max_tokens: 500
       })
     });
 
     const data = await response.json();
 
-    // Проверка на ошибки от Gemini API
+    // Проверка на ошибки
     if (data.error) {
-      console.error('Gemini API error:', data.error);
-      return res.status(500).json({ error: `Ошибка Gemini: ${data.error.message}` });
+      console.error('VseGPT API error:', data.error);
+      return res.status(500).json({ error: `Ошибка: ${data.error.message || 'неизвестная ошибка'}` });
     }
     
     // Извлекаем ответ
-    const reply = data.candidates[0].content.parts[0].text;
+    const reply = data.choices[0].message.content;
     res.status(200).json({ reply });
     
   } catch (error) {
