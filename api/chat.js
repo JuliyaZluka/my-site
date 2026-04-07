@@ -76,7 +76,7 @@ export default async function handler(req, res) {
              lowerMessage.includes('телефон') ||
              lowerMessage.includes('почта') ||
              lowerMessage.includes('email')) {
-      reply = '📞 Связаться со мной можно по телефону: +7 965 106-85-68 или по почте: ddf25@mail.ru. Буду рада ответить на все вопросы!';
+      reply = '📞 Связаться со мной можно по телефону: +7 978 450-31-08 или по почте: ddf25@mail.ru. Буду рада ответить на все вопросы!';
     }
     
     // Приветствия
