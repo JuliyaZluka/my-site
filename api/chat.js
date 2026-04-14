@@ -1,6 +1,5 @@
-// api/chat.js — умная имитация ИИ (без API, бесплатно)
+// api/chat.js — версия для DotPain (DeepSeek)
 export default async function handler(req, res) {
-  // Разрешаем запросы с вашего сайта
   const allowedOrigins = [
     'https://juliyazluka.github.io',
     'https://my-site-bice-three.vercel.app'
@@ -14,98 +13,56 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Метод не поддерживается' });
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Метод не поддерживается' });
+
+  const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
+
+  if (!DEEPSEEK_API_KEY) {
+    return res.status(500).json({ error: 'API ключ не настроен' });
   }
 
   try {
     const { message } = req.body;
-    
-    if (!message) {
-      return res.status(400).json({ error: 'Сообщение не получено' });
-    }
 
-    // Приводим сообщение к нижнему регистру для удобного поиска ключевых слов
-    const lowerMessage = message.toLowerCase();
+    const response = await fetch('https://llms.dotpoin.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages: [
+          {
+            role: 'system',
+            content: `Ты — дружелюбный помощник Юлии, которая создаёт одностраничные сайты.
+Отвечай кратко, по делу, вежливо.
+Информация о Юлии:
+- Стоимость сайта: от 10 000 руб.
+- Срок разработки: 3-7 дней
+- Услуги: лендинги, адаптация под мобильные устройства, формы обратной связи, ИИ-ассистенты
+- Контакты: телефон +7 965 106-85-68, email ddf25@mail.ru
+Если вопрос не по теме — предложи связаться с Юлией напрямую.`
+          },
+          { role: 'user', content: message }
+        ],
+        temperature: 0.7,
+        max_tokens: 500
+      })
+    });
+
+    const data = await response.json();
     
-    // База знаний Юлии (все ответы)
-    let reply = '';
-    
-    // Вопросы о цене
-    if (lowerMessage.includes('цена') || 
-        lowerMessage.includes('стоит') || 
-        lowerMessage.includes('сколько') ||
-        lowerMessage.includes('денег') ||
-        lowerMessage.includes('рублей')) {
-      reply = '📌 Стоимость разработки одностраничного сайта — от 10 000 рублей. Точная цена зависит от сложности и дополнительных функций. Напишите, что вам нужно, и я сделаю индивидуальный расчёт!';
+    if (data.error) {
+      return res.status(500).json({ error: data.error.message });
     }
     
-    // Вопросы о сроках
-    else if (lowerMessage.includes('срок') || 
-             lowerMessage.includes('долго') ||
-             lowerMessage.includes('дней') ||
-             lowerMessage.includes('быстро')) {
-      reply = '⏱️ Обычно разработка сайта занимает 3–7 дней. Всё зависит от сложности и скорости обратной связи с вами. Срочные заказы обсуждаем отдельно!';
-    }
-    
-    // Вопросы об услугах
-    else if (lowerMessage.includes('услуг') || 
-             lowerMessage.includes('делаешь') ||
-             lowerMessage.includes('созда') ||
-             lowerMessage.includes('разработ') ||
-             lowerMessage.includes('лендинг')) {
-      reply = '💻 Я создаю продающие лендинги, адаптирую сайты под мобильные устройства, добавляю формы обратной связи и ИИ-ассистентов, как этот чат. Всё под ключ — от идеи до запуска!';
-    }
-    
-    // Вопросы о портфолио
-    else if (lowerMessage.includes('портфолио') || 
-             lowerMessage.includes('пример') ||
-             lowerMessage.includes('работа')) {
-      reply = '🎨 Примеры моих работ можно посмотреть на этом сайте. Вот он — перед вами! Если нужны другие примеры — напишите, я покажу больше.';
-    }
-    
-    // Вопросы о контактах
-    else if (lowerMessage.includes('контакт') || 
-             lowerMessage.includes('связаться') ||
-             lowerMessage.includes('позвонить') ||
-             lowerMessage.includes('написать') ||
-             lowerMessage.includes('телефон') ||
-             lowerMessage.includes('почта') ||
-             lowerMessage.includes('email')) {
-      reply = '📞 Связаться со мной можно по телефону: +7 978 450-31-08 или по почте: ddf25@mail.ru. Буду рада ответить на все вопросы!';
-    }
-    
-    // Приветствия
-    else if (lowerMessage.includes('привет') || 
-             lowerMessage.includes('здравствуй') ||
-             lowerMessage.includes('добрый день') ||
-             lowerMessage.includes('доброе утро') ||
-             lowerMessage.includes('добрый вечер') ||
-             lowerMessage === 'hi' ||
-             lowerMessage === 'hello') {
-      reply = '👋 Привет! Я ИИ-помощник Юлии. Расскажу о создании сайтов, ценах и сроках. Что вас интересует?';
-    }
-    
-    // Благодарности
-    else if (lowerMessage.includes('спасиб') || 
-             lowerMessage.includes('благодар')) {
-      reply = '🙏 Пожалуйста! Обращайтесь, если появятся вопросы. Юлия всегда на связи!';
-    }
-    
-    // Если ничего не подошло
-    else {
-      reply = '🤔 Я ещё учусь отвечать на такие вопросы. Лучше всего задать вопрос о создании сайтов, ценах, сроках или контактах. Например: "Сколько стоит сайт?" или "Какие у вас услуги?". Или напишите Юлии напрямую — она ответит лично!';
-    }
-    
-    // Отправляем ответ
+    const reply = data.choices[0].message.content;
     res.status(200).json({ reply });
     
   } catch (error) {
-    console.error('Ошибка:', error);
+    console.error('Proxy error:', error);
     res.status(500).json({ error: 'Сервис временно недоступен' });
   }
 }
