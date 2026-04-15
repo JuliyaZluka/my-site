@@ -38,8 +38,8 @@
                 <li>Разработка лендингов под ключ</li>
                 <li>Адаптация под мобильные устройства</li>
                 <li>Добавление форм обратной связи</li>
-                <li>Абонентсое обслуживание</li>
-                <li>Техподдержка, Резервное копирование, Обновления, Продление услу, Обслуживание ИИ-ассистента</li>
+                <li>Абонентское обслуживание</li>
+                <li>Техподдержка, резервное копирование, обновления, продление услуг, обслуживание ИИ-ассистента</li>
             </ul>
         </div>
     </section>
@@ -49,20 +49,23 @@
             <h2>Контакты</h2>
             <p>Телефон: <a href="tel:+79784503109">+7 978 450-31-09</a></p>
             <p>Email: <a href="mailto:ddf25@mail.ru">ddf25@mail.ru</a></p>
+            <p>Telegram: <a href="https://t.me/Juliyazluka" target="_blank">@Juliyazluka</a></p>
+            
+            <!-- Форма заявки -->
+            <div class="contact-form">
+                <h3>📝 Оставить заявку</h3>
+                <form id="callback-form">
+                    <input type="text" id="form-name" name="name" placeholder="Ваше имя" required>
+                    <input type="tel" id="form-phone" name="phone" placeholder="Номер телефона" required>
+                    <input type="email" id="form-email" name="email" placeholder="Email (необязательно)">
+                    <textarea id="form-message" name="message" rows="3" placeholder="Что нужно сделать?"></textarea>
+                    <button type="submit" id="form-submit">📩 Отправить заявку</button>
+                </form>
+                <div id="form-status" style="display: none; margin-top: 10px;"></div>
+            </div>
         </div>
     </section>
-<!-- Форма заявки -->
-<div class="contact-form">
-    <h3>📝 Оставить заявку</h3>
-    <form id="callback-form">
-        <input type="text" id="form-name" name="name" placeholder="Ваше имя" required>
-        <input type="tel" id="form-phone" name="phone" placeholder="Номер телефона" required>
-        <input type="email" id="form-email" name="email" placeholder="Email (необязательно)">
-        <textarea id="form-message" name="message" rows="3" placeholder="Что нужно сделать?"></textarea>
-        <button type="submit" id="form-submit">📩 Отправить заявку</button>
-    </form>
-    <div id="form-status" style="display: none; margin-top: 10px;"></div>
-</div>
+
     <!-- ИИ-АССИСТЕНТ -->
     <div id="ai-chat-widget">
         <button id="chat-toggle" class="chat-toggle-btn">💬 Спросить ИИ</button>
@@ -86,7 +89,7 @@
 
     <script src="script.js"></script>
     <script>
-        // Адрес API на Vercel (исправлен — один слеш)
+        // Адрес API на Vercel
         const WORKER_URL = 'https://my-site-bice-three.vercel.app/api/chat';
         
         const toggleBtn = document.getElementById('chat-toggle');
@@ -161,53 +164,48 @@
         });
     </script>
     <script>
-    // !!! СЮДА ВСТАВЬТЕ ВАШ URL ВЕБ-ПРИЛОЖЕНИЯ ИЗ ЧАСТИ 2 !!!
-    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzGP9ByXfv7yikXGqfCq22EfrIhKrBIZfBRiKXj04aeizMWAqdc6Hge4YQD4v0J8RaTig/exec';
+        // GOOGLE SHEETS — ОТПРАВКА ЗАЯВОК
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzGP9ByXfv7yikXGqfCq22EfrIhKrBIZfBRiKXj04aeizMWAqdc6Hge4YQD4v0J8RaTig/exec';
 
-    const form = document.getElementById('callback-form');
-    const statusDiv = document.getElementById('form-status');
+        const form = document.getElementById('callback-form');
+        const statusDiv = document.getElementById('form-status');
 
-    if (form) {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
 
-            // Собираем данные из формы в объект
-            const formData = {
-                name: document.getElementById('form-name').value,
-                phone: document.getElementById('form-phone').value,
-                email: document.getElementById('form-email').value,
-                message: document.getElementById('form-message').value
-            };
+                const formData = {
+                    name: document.getElementById('form-name').value,
+                    phone: document.getElementById('form-phone').value,
+                    email: document.getElementById('form-email').value,
+                    message: document.getElementById('form-message').value
+                };
 
-            // Показываем статус "Отправляем..."
-            statusDiv.style.display = 'block';
-            statusDiv.textContent = 'Отправляем...';
-            statusDiv.className = '';
+                statusDiv.style.display = 'block';
+                statusDiv.textContent = 'Отправляем...';
+                statusDiv.className = '';
 
-            try {
-                // Отправляем POST-запрос к нашему скрипту
-                const response = await fetch(GOOGLE_SHEETS_URL, {
-                    method: 'POST',
-                    mode: 'no-cors', // Специальный режим для запросов к Google
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
+                try {
+                    await fetch(GOOGLE_SHEETS_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
 
-                // При режиме 'no-cors' мы не можем прочитать ответ, поэтому просто показываем успех
-                statusDiv.className = 'success';
-                statusDiv.textContent = '✅ Заявка отправлена! Я свяжусь с вами.';
-                form.reset();
+                    statusDiv.className = 'success';
+                    statusDiv.textContent = '✅ Заявка отправлена! Я свяжусь с вами.';
+                    form.reset();
 
-            } catch (error) {
-                console.error('Ошибка:', error);
-                statusDiv.className = 'error';
-                statusDiv.textContent = '❌ Ошибка. Попробуйте позже или напишите в Telegram.';
-            }
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                    statusDiv.className = 'error';
+                    statusDiv.textContent = '❌ Ошибка. Попробуйте позже или напишите в Telegram.';
+                }
 
-            // Скрываем сообщение через 5 секунд
-            setTimeout(() => { statusDiv.style.display = 'none'; }, 5000);
-        });
-    }
-</script>
+                setTimeout(() => { statusDiv.style.display = 'none'; }, 5000);
+            });
+        }
+    </script>
 </body>
 </html>
