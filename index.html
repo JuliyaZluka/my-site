@@ -51,7 +51,18 @@
             <p>Email: <a href="mailto:ddf25@mail.ru">ddf25@mail.ru</a></p>
         </div>
     </section>
-
+<!-- Форма заявки -->
+<div class="contact-form">
+    <h3>📝 Оставить заявку</h3>
+    <form id="callback-form">
+        <input type="text" id="form-name" name="name" placeholder="Ваше имя" required>
+        <input type="tel" id="form-phone" name="phone" placeholder="Номер телефона" required>
+        <input type="email" id="form-email" name="email" placeholder="Email (необязательно)">
+        <textarea id="form-message" name="message" rows="3" placeholder="Что нужно сделать?"></textarea>
+        <button type="submit" id="form-submit">📩 Отправить заявку</button>
+    </form>
+    <div id="form-status" style="display: none; margin-top: 10px;"></div>
+</div>
     <!-- ИИ-АССИСТЕНТ -->
     <div id="ai-chat-widget">
         <button id="chat-toggle" class="chat-toggle-btn">💬 Спросить ИИ</button>
