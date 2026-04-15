@@ -160,5 +160,54 @@
             }
         });
     </script>
+    <script>
+    // !!! СЮДА ВСТАВЬТЕ ВАШ URL ВЕБ-ПРИЛОЖЕНИЯ ИЗ ЧАСТИ 2 !!!
+    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwltq9im22L56LC3m5HCTzfUGQOR9bSNs-4w3mNR3ta8Lg4erYrN4-mdIwRl2UzdS20/exec';
+
+    const form = document.getElementById('callback-form');
+    const statusDiv = document.getElementById('form-status');
+
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Собираем данные из формы в объект
+            const formData = {
+                name: document.getElementById('form-name').value,
+                phone: document.getElementById('form-phone').value,
+                email: document.getElementById('form-email').value,
+                message: document.getElementById('form-message').value
+            };
+
+            // Показываем статус "Отправляем..."
+            statusDiv.style.display = 'block';
+            statusDiv.textContent = 'Отправляем...';
+            statusDiv.className = '';
+
+            try {
+                // Отправляем POST-запрос к нашему скрипту
+                const response = await fetch(GOOGLE_SHEETS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Специальный режим для запросов к Google
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                // При режиме 'no-cors' мы не можем прочитать ответ, поэтому просто показываем успех
+                statusDiv.className = 'success';
+                statusDiv.textContent = '✅ Заявка отправлена! Я свяжусь с вами.';
+                form.reset();
+
+            } catch (error) {
+                console.error('Ошибка:', error);
+                statusDiv.className = 'error';
+                statusDiv.textContent = '❌ Ошибка. Попробуйте позже или напишите в Telegram.';
+            }
+
+            // Скрываем сообщение через 5 секунд
+            setTimeout(() => { statusDiv.style.display = 'none'; }, 5000);
+        });
+    }
+</script>
 </body>
 </html>
