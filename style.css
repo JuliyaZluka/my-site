@@ -271,3 +271,93 @@ h1, h2 {
     .chat-toggle-btn { padding: 10px 18px; font-size: 14px; }
     .chat-messages { height: 280px; }
 }
+/* ========== ФОРМА ЗАЯВКИ ========== */
+.contact-form {
+    max-width: 500px;
+    margin: 30px auto 0 auto;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.contact-form h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    background: white;
+    box-shadow: 0 0 0 2px #4a6fa5;
+}
+
+.contact-form button {
+    width: 100%;
+    background: #4a6fa5;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 12px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.contact-form button:hover {
+    background: #2c4c7a;
+    transform: scale(1.02);
+}
+
+#form-status {
+    text-align: center;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 30px;
+    font-size: 14px;
+}
+
+#form-status.success {
+    background: rgba(0, 200, 0, 0.2);
+    color: #ccffcc;
+}
+
+#form-status.error {
+    background: rgba(200, 0, 0, 0.2);
+    color: #ffcccc;
+}
+
+/* Для мобильных устройств */
+@media (max-width: 600px) {
+    .contact-form {
+        margin: 20px 15px 0 15px;
+        padding: 20px;
+    }
+    
+    .contact-form h3 {
+        font-size: 1.2rem;
+    }
+    
+    .contact-form button {
+        font-size: 16px;
+    }
+}
